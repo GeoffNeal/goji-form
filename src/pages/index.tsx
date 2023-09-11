@@ -4,6 +4,9 @@ import { Inter } from "@next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// Components
+import Form from "@/components/Form";
+
 /*
 
   form
@@ -32,12 +35,23 @@ export default function Home() {
           </span>
           <ul className="list-disc pl-6">
             <li>investor name (text input)</li>
-            <li>share class (dropdown input) using the shareClasses array provided</li>
+            <li>
+              share class (dropdown input) using the shareClasses array provided
+            </li>
             <li>subscription amount (text input)</li>
-            <li>submission date (date input) which needs to be ISO8601 format when submitted</li>
+            <li>
+              submission date (date input) which needs to be ISO8601 format when
+              submitted
+            </li>
           </ul>
-          <span className="">The form should submit to "/api/order" as a "POST" request and on 200 response should transition to the page "/orders"</span>
+          <span className="">
+            The form should submit to "/api/order" as a "POST" request and on
+            200 response should transition to the page "/orders"
+          </span>
         </div>
+        <Form>
+          <input placeholder="test" />
+        </Form>
       </main>
     </>
   );
