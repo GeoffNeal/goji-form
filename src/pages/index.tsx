@@ -91,7 +91,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="p-6 flex justify-center items-center h-screen">
+      <main className="p-6 flex flex-col justify-center items-center h-screen">
         <Form onSubmit={handleSubmit}>
           <FormCol>
             <FormRow>
