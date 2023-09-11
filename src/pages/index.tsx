@@ -5,7 +5,8 @@ import { Inter } from "@next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 // Components
-import Form from "@/components/Form";
+import Form, { FormCol, FormRow } from "@/components/Form";
+import { Input, Dropdown } from "@/components/FormField";
 
 /*
 
@@ -50,7 +51,24 @@ export default function Home() {
           </span>
         </div>
         <Form>
-          <input placeholder="test" />
+          <FormCol>
+            <FormRow>
+              <Input label="Investor Name" id="name" name="name" />
+              <Dropdown
+                options={shareClasses}
+                id="shareClass"
+                name="shareClass"
+              />
+            </FormRow>
+            <Input
+              label="Subscription Amount"
+              type="number"
+              id="amount"
+              name="amount"
+            />
+            <Input label="Submission Date" type="date" id="date" name="date" />
+          </FormCol>
+          <button type="submit">Submit</button>
         </Form>
       </main>
     </>
