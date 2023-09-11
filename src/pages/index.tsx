@@ -1,10 +1,6 @@
 import Head from "next/head";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { Inter } from "@next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
 
 // Components
 import Form, { FormCol, FormRow } from "@/components/Form";
