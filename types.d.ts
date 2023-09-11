@@ -1,3 +1,13 @@
+type Order = {
+  date: string;
+  name: string;
+  shareClass: string;
+  funds: {
+    amount: string;
+    currency: "EUR";
+  };
+};
+
 interface ICallback<ArgType, Ret = void> {
   (...args: ArgType[]): Ret;
 }

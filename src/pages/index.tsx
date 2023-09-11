@@ -1,5 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import { Inter } from "@next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -20,6 +22,71 @@ import { Input, Dropdown } from "@/components/FormField";
 const shareClasses = ["ACME Partners Private Fund", "Goji Private Fund"];
 
 export default function Home() {
+  const router = useRouter();
+  const [error, setError] = useState(false);
+  const [values, setValues] = useState<Order>({
+    date: "",
+    name: "",
+    shareClass: shareClasses[0],
+    funds: { amount: "", currency: "EUR" },
+  });
+
+  const validate = () => {
+    let isValid = true;
+    // Check all fields have values
+    Object.values(values).forEach((val) => {
+      if (!val) {
+        isValid = false;
+      }
+    });
+
+    return isValid;
+  };
+
+  const handleSubmit: React.EventHandler<React.FormEvent> = async (e) => {
+    e.preventDefault();
+
+    if (!validate()) {
+      setError(true);
+      return;
+    }
+
+    const response = await fetch("/api/order", {
+      method: "POST",
+      body: JSON.stringify(values),
+    });
+
+    if (response.status === 200) {
+      router.push("/orders");
+      return;
+    }
+
+    setError(true);
+  };
+
+  const handleChange: React.EventHandler<
+    React.ChangeEvent<HTMLInputElement>
+  > = (e) => {
+    let { name, value } = e.target;
+
+    if (name === "funds") {
+      setValues((prevValues) => ({
+        ...prevValues,
+        funds: { ...prevValues.funds, amount: value },
+      }));
+      return;
+    }
+
+    setValues((prevValues) => ({ ...prevValues, [name]: value }));
+  };
+
+  const handleDropdownChange: React.EventHandler<
+    React.ChangeEvent<HTMLSelectElement>
+  > = (e) => {
+    let { value } = e.target;
+    setValues((prevValues) => ({ ...prevValues, shareClass: value }));
+  };
+
   return (
     <>
       <Head>
@@ -29,47 +96,48 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="p-6 flex justify-center items-center h-screen">
-        <div className="max-w-xl space-y-2 border rounded-sm p-6">
-          <span className="text-lg">
-            A form should be displayed here that allows the user to input the
-            following:
-          </span>
-          <ul className="list-disc pl-6">
-            <li>investor name (text input)</li>
-            <li>
-              share class (dropdown input) using the shareClasses array provided
-            </li>
-            <li>subscription amount (text input)</li>
-            <li>
-              submission date (date input) which needs to be ISO8601 format when
-              submitted
-            </li>
-          </ul>
-          <span className="">
-            The form should submit to "/api/order" as a "POST" request and on
-            200 response should transition to the page "/orders"
-          </span>
-        </div>
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <FormCol>
             <FormRow>
-              <Input label="Investor Name" id="name" name="name" />
+              <Input
+                label="Investor Name"
+                id="name"
+                name="name"
+                onChange={handleChange}
+                value={values.name}
+              />
               <Dropdown
                 options={shareClasses}
                 id="shareClass"
                 name="shareClass"
+                onChange={handleDropdownChange}
+                value={values.shareClass}
               />
             </FormRow>
             <Input
               label="Subscription Amount"
               type="number"
-              id="amount"
-              name="amount"
+              id="funds"
+              name="funds"
+              onChange={handleChange}
+              value={values.funds.amount}
             />
-            <Input label="Submission Date" type="date" id="date" name="date" />
+            <Input
+              label="Submission Date"
+              type="date"
+              id="date"
+              name="date"
+              onChange={handleChange}
+              value={values.date}
+            />
           </FormCol>
           <button type="submit">Submit</button>
         </Form>
+        {error ? (
+          <div>
+            <p>Something went wrong</p>
+          </div>
+        ) : null}
       </main>
     </>
   );
